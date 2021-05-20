@@ -37,7 +37,8 @@ true
 int main()
 {
     vector<vector<int>> grid(9);
-    //get input
+    set<int> dupdetctor;
+
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
             int n;
@@ -52,10 +53,9 @@ int main()
         sum = 0;
         for (int j=0; j<grid[i].size(); j++){
             sum += grid[i][j];
-            cerr<<grid[i][j];
         }
-        cerr <<" :" <<sum << endl;
         if (sum != 45){
+            cout<<"false"<<endl;
             exit(0);
         }
     }
@@ -68,24 +68,38 @@ int main()
             int n = grid[j][i];
             sum += n;
         }    
-
-        if (sum != 45){
-            exit(0);
-        }   
-    }
-
-    // subgrid
-    for (int i=0; i<grid.size(); i++){
-        sum = 0;
-        for (int j=0; j<grid[i].size(); j++){
-            int n = grid[i%3+i/3][j%3+j/3];
-            sum += n;
-        }    
-
         if (sum != 45){
             cout<<"false"<<endl;
             exit(0);
         }   
     }
+
+    cerr<<endl;
+
+    // subgrid
+    for (int i=0; i<9; i+=3){
+        
+        for (int j=0; j<9; j+=3){
+            sum = 0;
+            for (int k=0; k<3;k++){
+                for (int l=0; l<3; l++){
+                    // use set to detect duplicate numbers
+                    auto r = dupdetctor.insert(grid[i+k][j+l]);
+                    if (!r.second){
+                        cout<<"false"<<endl;
+                        exit(0);
+                    }
+                    sum += grid[i+k][j+l];
+                }
+            }
+            cerr<<" :"<<sum<<endl;
+            if (sum != 45){
+                cout<<"false"<<endl;
+                exit(0);
+            }
+            dupdetctor.clear();
+        }  
+    }
+
     cout << "true" << endl;
 }
